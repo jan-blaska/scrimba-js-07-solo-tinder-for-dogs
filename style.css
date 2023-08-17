@@ -109,10 +109,12 @@ body {
 
 .like-bar--button-dislike:hover {
 	background-color: #FFE7EF;
+	cursor: pointer;
 }
 
 .like-bar--button-like:hover {
 	background-color: #DBFFF4;
+	cursor: pointer;
 }
 
 .badge {
@@ -123,5 +125,40 @@ body {
 	transform: rotate(-30deg);
 }
 
+.last-page {
+	padding: 10px;
+	min-height: 745px;
+}
+
+.last-page h1 {
+	color: #FA695A;
+}
+
+.image-grid {
+    display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	grid-gap: 10px;
+}
+
+.image-item {
+    max-width: 100%;
+}
+
+.new-matches-btn {
+	font-family: inherit;
+	margin: 20px auto 0;
+	display: block;
+	font-size: 20px;
+	padding: 10px 20px;
+	border-radius: 10px;
+	border: none;
+	background: linear-gradient(45deg, #FA695A, #F83375);
+	color: #fff;
+}
+
+.new-matches-btn:hover {
+	background: linear-gradient(45deg, #F83375, #FA695A);
+	cursor: pointer;
+}
 
 
