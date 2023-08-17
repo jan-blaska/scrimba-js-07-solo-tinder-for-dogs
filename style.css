@@ -70,16 +70,15 @@ body {
 
 .dog-description-header {
 	font-size: 32px;
-	color: #F8F8F8;
+	color: #fff;
 	font-weight: 600;
 	margin-bottom: 0;
 }
 
 .dog-description-note {
 	font-size: 24px;
-	color: #B7B7B7;
+	color: #fff;
 	margin-top: 0;
-	
 }
 
 .like-bar--button-dislike,
@@ -146,7 +145,7 @@ body {
 
 .new-matches-btn {
 	font-family: inherit;
-	margin: 20px auto 0;
+	margin: 20px auto 15px;
 	display: block;
 	font-size: 20px;
 	padding: 10px 20px;
@@ -159,6 +158,10 @@ body {
 .new-matches-btn:hover {
 	background: linear-gradient(45deg, #F83375, #FA695A);
 	cursor: pointer;
+}
+
+.hidden {
+	display: none;
 }
 
 

@@ -1,104 +1,80 @@
 import dogsData from './data.js';
+import Dog from './dog.js';
 
-let dogsArray = ["rex"]
+let dogsArray = ["rex", "bella", "teddy", "tom", "alan"];
+let likedDogs = [];
 
+// it randomly picks one dog from the array
 function getNewDog() {
-	const nextDogData = dogsData[dogsArray.shift()]
-	return nextDogData ? new Dog(nextDogData) : {}
+	let nextDogData;
+	let randomNumber = Math.floor(Math.random() * dogsArray.length);
+	nextDogData = dogsData[dogsArray[randomNumber]];
+	dogsArray.splice([randomNumber], 1);
+	return nextDogData ? new Dog(nextDogData) : {};
 }
 
-class Dog {
-	constructor(data) {
-		Object.assign(this, data)
-	}
-
-	setHasBeenLiked() {
-		this.hasBeenLiked = true;
-	}
-
-	setHasBeenSwiped() {
-		this.hasBeenSwiped = true;
-	}
-
-	getBatchHtml() {
-		return `
-			<img class="badge" src=${this.hasBeenLiked ? "/images/badge-like.png" : "/images/badge-nope.png"} alt="badge"></img>
-		`
-	}
-
-	getDogCardHtml() {
-		const { name, avatar, age, bio, hasBeenSwiped, hasBeenLiked } = this
-		const batch = this.getBatchHtml()
-		return `
-			<img class="dog-image" src=${avatar} alt="photo of the dog">
-			<div class="dog-description">
-				<h4 class="dog-description-header">${name}, ${age}</h4>
-				<p class="dog-description-note">${bio}</p>
-			</div>
-			${hasBeenSwiped ? batch : ""}
-		`
-	}
+// when user clicks on like or dislike button, the app waits for 1.5s before rendering of new dog
+function getAnotherDog() {
+	setTimeout(() => {
+		if (dogsArray.length > 0) {
+			dog = getNewDog();
+			render();
+		} else {
+			endSwipe();
+		}
+	}, 1500);
 }
 
 document.getElementById('btn-dislike').addEventListener('click', () => {
 	dog.setHasBeenSwiped();
 	render();
-	setTimeout(() => {
-		if (dogsArray.length > 0) {
-			dog = getNewDog()
-			render();
-		} else {
-			endSwipe();
-		}
-	}, 1500)
+	getAnotherDog();
 })
 
 document.getElementById('btn-like').addEventListener('click', () => {
 	dog.setHasBeenSwiped();
-	dog.setHasBeenLiked();
+	likedDogs.push(dog.setHasBeenLiked());
 	render();
-	setTimeout(() => {
-		if (dogsArray.length > 0) {
-			dog = getNewDog()
-			render();
-		} else {
-			endSwipe();
-		}
-	}, 1500)
+	getAnotherDog();
 })
 
-if (document.getElementById('new-matches-btn')) {
-	document.getElementById('new-matches-btn').addEventListener('click', () => {
-		dogsArray = ["rex", "bella", "teddy", "tom", "alan"]
-		console.log("new swiping btn blicked")
-		dog = getNewDog()
-		render();
-	})
-}
-
-function myFunction() {
-	console.log("JUPII")
-}
-
-
-function render() {
-	document.getElementById('dog-card').innerHTML = dog.getDogCardHtml()
-}
-
 function endSwipe() {
+	// those dogs who were liked, will be mapped to array as html
+	const likedDogsHtml = likedDogs.map((dog) => {
+		return `
+			<img src=${dog} class="image-item" alt="">
+		`
+	});
+	// renders the last page, when no more dogs are available
 	document.getElementById('dog-card').innerHTML = `
 		<div class="last-page">
-			<h1>Whhhrrrrr! You have matched with these dogs!</h1>
-			<h1>Oooops! You have not matched with any dog..</h1>
+			${likedDogs.length > 0 ? "<h1>Whhhrrrrr! You have matched with these dogs!</h1>" 
+				: "<h1>Oooops! You have not matched with any dog..</h1>"}
 			<div class="image-grid">
-				<img src="/images/dog-alan.jpg" class="image-item" alt="">
-				<img src="/images/dog-alan.jpg" class="image-item" alt="">
-				<img src="/images/dog-alan.jpg" class="image-item" alt="">
+				${likedDogsHtml.join('')}
 			</div>
-			<button id="new-matches-btn" class="new-matches-btn" onclick="myFunction()">Find new matches</button>
+			<button id="new-matches-btn" class="new-matches-btn">Find new matches</button>
 		</div>
-	`
+	`;
+	// we hide the buttons like / dislike because there are no more dogs to swipe
+	document.getElementById('like-bar').classList.add("hidden");
+	// if user clicks the button on the last page, all swiping will start again
+	document.getElementById('new-matches-btn').addEventListener('click', () => {
+		setTimeout(() => {
+			dogsArray = ["rex", "bella", "teddy", "tom", "alan"];
+			likedDogs = [];
+			dog = getNewDog();
+			document.getElementById('like-bar').classList.remove("hidden");
+			render();
+		}, 1000);
+	});
 }
 
-let dog = getNewDog()
-render()
+// it renders the card with the current dog
+function render() {
+	document.getElementById('dog-card').innerHTML = dog.getDogCardHtml();
+};
+
+// we take the first dog when the app is launched
+let dog = getNewDog();
+render();
